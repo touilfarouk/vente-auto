@@ -48,43 +48,45 @@
               <p class="text-gray-600">Veuillez remplir les détails ci-dessous</p>
             </div>
             <form id="carForm" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+               <div>
+                <input hidden id="matricule" name="matricule" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded" >
+              </div>
               <div>
                 <label class="block text-gray-700">Marque</label>
-                <input id="matricule" name="matricule" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
-              </div>
-               <div>
-                <label class="block text-gray-700">Année</label>
-                <input type="number" id="year_of_release" name="year_of_release" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+                <input id="marque" name="marque" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
               </div>
               <div>
                 <label class="block text-gray-700">Modèle</label>
                 <input type="text" id="car_type" name="car_type" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
               </div>
-             
               <div>
-                <label class="block text-gray-700">Kilométrage (km)</label>
-                <input type="number" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+                <label class="block text-gray-700">Année</label>
+                <input type="number" id="year_of_release" name="year_of_release" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
               </div>
               <div>
-                <label class="block text-gray-700">Prix (€)</label>
-                <input type="number" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+                <label class="block text-gray-700">Kilométrage (km)</label>
+                <input type="number" id="kilometrage" name="kilometrage"  class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+              </div>
+              <div>
+                <label class="block text-gray-700">Prix (DA)</label>
+                <input type="number" id="prix" name="prix" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
               </div>
               <div>
                 <label class="block text-gray-700">Type de Carburant</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+                <select id="carburant" name="carburant"  class="w-full mt-1 p-2 border border-gray-300 rounded" required>
                   <option value="">Sélectionnez</option>
-                  <option>Essence</option>
-                  <option>Diesel</option>
-                  <option>Électrique</option>
-                  <option>Hybride</option>
+                  <option value="Essence">Essence</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="Électrique">Électrique</option>
+                  <option value="Hybride">Hybride</option>
                 </select>
               </div>
               <div>
                 <label class="block text-gray-700">Transmission</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+                <select  id="transmission" name="transmission" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
                   <option value="">Sélectionnez</option>
-                  <option>Manuelle</option>
-                  <option>Automatique</option>
+                  <option value="Manuelle">Manuelle</option>
+                  <option value="Automatique">Automatique</option>
                 </select>
               </div>
               <div></div>
@@ -107,7 +109,23 @@
     <p class="text-gray-700">Ce site vous permet de vendre ou d'acheter des voitures d'occasion facilement.</p>
     <p class="text-gray-700 mt-2">Développé par une équipe passionnée d'automobile et de technologie.</p>
   </div>
+<script>
+  function generateNumericMatricule(length = 8) {
+    let matricule = '';
+    for (let i = 0; i < length; i++) {
+      matricule += Math.floor(Math.random() * 10); // adds random digit (0-9)
+    }
+    return matricule;
+  }
 
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('matricule');
+    if (input) {
+      input.value = generateNumericMatricule(); // default 8 digits
+      console.log("Matricule généré :", input.value); // Optional debug
+    }
+  });
+</script>
   <script>
     // Show "accueil" by default
     showPage('accueil');
@@ -147,16 +165,26 @@
       .then(response => response.json())
       .then(json => {
         if (json.result === 'success') {
+          const marque = document.getElementById('marque').value;
           const matricule = document.getElementById('matricule').value;
           const year = document.getElementById('year_of_release').value;
           const carType = document.getElementById('car_type').value;
+          const kilometrage = document.getElementById('kilometrage').value;
+          const prix = document.getElementById('prix').value;
+          const carburant = document.getElementById('carburant').value;
+          const transmission = document.getElementById('transmission').value;
 
           const contactUrl = `https://onta.dz/bn/contact.html?car=${encodeURIComponent(matricule)}`;
 
           document.getElementById('carDetails').innerHTML = `
+            <strong>marque:</strong> ${marque}<br>
             <strong>Matricule:</strong> ${matricule}<br>
             <strong>Year:</strong> ${year}<br>
             <strong>Type:</strong> ${carType}<br><br>
+            <strong>Kilometrage:</strong> ${kilometrage}<br><br>
+            <strong>Prix:</strong> ${prix}<br><br>
+            <strong>Carburant:</strong> ${carburant}<br><br>
+            <strong>Transmission:</strong> ${transmission}<br><br>
           `;
 
           // Generate QR Code in canvas
