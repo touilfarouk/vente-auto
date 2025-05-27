@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Application de Vente de Voiture</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+    <script src="qrcode.min.js"></script> <!-- Load local QR code library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    function showPage(pageId) {
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.add("hidden");
+      });
+      document.getElementById(pageId).classList.remove("hidden");
+    }
+  </script>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Navigation -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <div class="text-xl font-bold text-cyan-600">VoitureVente</div>
+        <div class="space-x-4">
+          <button onclick="showPage('accueil')" class="text-gray-700 hover:text-cyan-600">Accueil</button>
+          <button onclick="showPage('formulaire')" class="text-gray-700 hover:text-cyan-600">Formulaire</button>
+          <button onclick="showPage('apropos')" class="text-gray-700 hover:text-cyan-600">À propos</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Pages -->
+  <div id="accueil" class="page p-8">
+    <h2 class="text-3xl font-bold mb-4 text-cyan-700">Bienvenue sur notre site</h2>
+    <p class="text-gray-700">Trouvez ou vendez une voiture en quelques clics.</p>
+  </div>
+
+  <div id="formulaire" class="page hidden">
+    <div class="mt-12 py-6 flex flex-col justify-center">
+      <div class="relative py-3 sm:max-w-6xl sm:mx-auto">
+        <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+        <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+          <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-6">
+              <h1 class="text-2xl font-bold text-gray-900">Formulaire de Vente de Voiture</h1>
+              <p class="text-gray-600">Veuillez remplir les détails ci-dessous</p>
+            </div>
+            <form id="carForm" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-gray-700">Marque</label>
+                <input id="matricule" name="matricule" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+              </div>
+               <div>
+                <label class="block text-gray-700">Année</label>
+                <input type="number" id="year_of_release" name="year_of_release" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+              </div>
+              <div>
+                <label class="block text-gray-700">Modèle</label>
+                <input type="text" id="car_type" name="car_type" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+              </div>
+             
+              <div>
+                <label class="block text-gray-700">Kilométrage (km)</label>
+                <input type="number" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+              </div>
+              <div>
+                <label class="block text-gray-700">Prix (€)</label>
+                <input type="number" class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+              </div>
+              <div>
+                <label class="block text-gray-700">Type de Carburant</label>
+                <select class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+                  <option value="">Sélectionnez</option>
+                  <option>Essence</option>
+                  <option>Diesel</option>
+                  <option>Électrique</option>
+                  <option>Hybride</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-gray-700">Transmission</label>
+                <select class="w-full mt-1 p-2 border border-gray-300 rounded" required>
+                  <option value="">Sélectionnez</option>
+                  <option>Manuelle</option>
+                  <option>Automatique</option>
+                </select>
+              </div>
+              <div></div>
+              <div class="col-span-4">
+                <label class="block text-gray-700">Description</label>
+                <textarea class="w-full mt-1 p-2 border border-gray-300 rounded" rows="4"></textarea>
+              </div>
+              <div class="col-span-4 text-center">
+                <button type="submit" class="bg-cyan-500 text-white px-6 py-2 rounded hover:bg-cyan-600">Soumettre</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="apropos" class="page hidden p-8">
+    <h2 class="text-3xl font-bold text-cyan-700 mb-4">À propos</h2>
+    <p class="text-gray-700">Ce site vous permet de vendre ou d'acheter des voitures d'occasion facilement.</p>
+    <p class="text-gray-700 mt-2">Développé par une équipe passionnée d'automobile et de technologie.</p>
+  </div>
+
+  <script>
+    // Show "accueil" by default
+    showPage('accueil');
+  </script>
+
+  <div id="qrFlyer" style="display:none; margin-top:2rem; text-align:center;">
+    <h3> Flyer</h3>
+    <p>Hang this on your car:</p>
+   <div id="flyerContent" style="border:1px solid #ccc; padding:2rem; display:inline-block; width:1000px;">
+
+      <div id="carDetails"></div>
+      <canvas id="qrCanvas"></canvas>
+    </div>
+    <br>
+    <button onclick="window.print()">Print</button>
+    <br>
+<button onclick="downloadPDF()">Download as PDF</button>
+  </div>
+
+  <p id="response"></p>
+
+  <script>
+    document.getElementById('carForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const data = new URLSearchParams();
+
+      for (const pair of formData) {
+        data.append(pair[0], pair[1]);
+      }
+
+      fetch('https://script.google.com/macros/s/AKfycbyBV_Zi1OGPVRcbyczCOuV4MyVKSH5TLjqk1229wSLIzldys8sPJCx9qsc_vUdXFhxYIA/exec', {
+        method: 'POST',
+        body: data
+      })
+      .then(response => response.json())
+      .then(json => {
+        if (json.result === 'success') {
+          const matricule = document.getElementById('matricule').value;
+          const year = document.getElementById('year_of_release').value;
+          const carType = document.getElementById('car_type').value;
+
+          const contactUrl = `https://onta.dz/bn/contact.html?car=${encodeURIComponent(matricule)}`;
+
+          document.getElementById('carDetails').innerHTML = `
+            <strong>Matricule:</strong> ${matricule}<br>
+            <strong>Year:</strong> ${year}<br>
+            <strong>Type:</strong> ${carType}<br><br>
+          `;
+
+          // Generate QR Code in canvas
+          QRCode.toCanvas(document.getElementById('qrCanvas'), contactUrl, { width: 800 }, function (error) {
+            if (error) console.error(error);
+            document.getElementById('qrFlyer').style.display = 'block';
+          });
+
+          document.getElementById('response').textContent = `Data submitted successfully (Row ${json.row})`;
+        } else {
+          document.getElementById('response').textContent = `Error: ${json.error}`;
+        }
+      })
+      .catch(err => {
+        document.getElementById('response').textContent = `Error: ${err}`;
+      });
+    });
+
+    function downloadPDF() {
+    const element = document.getElementById('flyerContent');
+
+    const opt = {
+        margin:       0.5,
+        filename:     'car_qr_flyer.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+    }
+
+  </script>
+</body>
+</html>
