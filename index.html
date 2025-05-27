@@ -92,7 +92,7 @@
               <div></div>
               <div class="col-span-4">
                 <label class="block text-gray-700">Description</label>
-                <textarea class="w-full mt-1 p-2 border border-gray-300 rounded" rows="4"></textarea>
+                <textarea  id="description" name="description" class="w-full mt-1 p-2 border border-gray-300 rounded" rows="4"></textarea>
               </div>
               <div class="col-span-4 text-center">
                 <button type="submit" class="bg-cyan-500 text-white px-6 py-2 rounded hover:bg-cyan-600">Soumettre</button>
@@ -173,6 +173,7 @@
           const prix = document.getElementById('prix').value;
           const carburant = document.getElementById('carburant').value;
           const transmission = document.getElementById('transmission').value;
+          const description = document.getElementById('description').value;
 
           const contactUrl = `https://onta.dz/bn/contact.html?car=${encodeURIComponent(matricule)}`;
 
@@ -185,6 +186,7 @@
             <strong>Prix:</strong> ${prix}<br><br>
             <strong>Carburant:</strong> ${carburant}<br><br>
             <strong>Transmission:</strong> ${transmission}<br><br>
+            <strong>Description:</strong> ${description}<br><br>
           `;
 
           // Generate QR Code in canvas
